@@ -6,6 +6,7 @@ require("dotenv").config();
 console.log(process.env.MONGO_URI);
 
 const taskRoutes = require("./routes/taskRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -21,5 +22,5 @@ mongoose
   });
 
 app.use("/tasks", taskRoutes);
-
+app.use("/auth", authRoutes);
 module.exports = app;

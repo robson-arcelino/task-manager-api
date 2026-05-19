@@ -1,96 +1,66 @@
 const Task = require("../models/Task");
 
-const createTask = async (req, res) => {
-
+const getTasks = async (req, res) => {
   try {
-
-    const { title } = req.body;
-
-    const newTask = await Task.create({
-      title
-    });
-
-    res.status(201).json(newTask);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: "Erro ao criar tarefa"
-    });
-
-  }
-
-};
-
-const getAllTasks = async (req, res) => {
-
-  try {
-
     const tasks = await Task.find();
 
     res.status(200).json(tasks);
 
   } catch (error) {
-
     res.status(500).json({
-      message: "Erro ao buscar tarefas"
+      message: error.message
     });
-
   }
+};
 
+const createTask = async (req, res) => {
+  try {
+    const task = await Task.create(req.body);
+
+    res.status(201).json(task);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
 };
 
 const updateTask = async (req, res) => {
-
   try {
-
-    const { id } = req.params;
-
-    const updatedTask = await Task.findByIdAndUpdate(
-      id,
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
       req.body,
-      {
-        new: true
-      }
+      { new: true }
     );
 
-    res.status(200).json(updatedTask);
+    res.status(200).json(task);
 
   } catch (error) {
-
     res.status(500).json({
-      message: "Erro ao atualizar tarefa"
+      message: error.message
     });
-
   }
-
 };
 
 const deleteTask = async (req, res) => {
-
   try {
-
-    const { id } = req.params;
-
-    await Task.findByIdAndDelete(id);
+    await Task.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
-      message: "Tarefa deletada com sucesso"
+      message: "Task deletada"
     });
 
   } catch (error) {
-
     res.status(500).json({
-      message: "Erro ao deletar tarefa"
+      message: error.message
     });
-
   }
-
 };
 
 module.exports = {
+  getTasks,
   createTask,
-  getAllTasks,
   updateTask,
   deleteTask
 };
